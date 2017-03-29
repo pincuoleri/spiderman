@@ -33,7 +33,7 @@ def spiderman(page):
 #以页码为名称，创建文件夹
 
         htmlinfo = gethtml(url)
-        piclist = re.findall('查看原图.*?"(.*?[jpgnif]{3})"', htmlinfo.text)
+        piclist = re.findall('查看原图.*"(.*[jpgnif]{3})"', htmlinfo.text)
 #获取目标图片地址的列表
 
         for picinfo in piclist:
@@ -47,11 +47,11 @@ def spiderman(page):
             htmlinfo= gethtml(picinfo,True)
             picinfolist.append([picpath,picname,htmlinfo])
         return picinfolist
-#get picpath, pathname, pathinfo and so on       
+#get picpath, pathname, pathinfo and so on
 
 if __name__ == '__main__':
     while True:
-        num = input('请输入页码范围，min-max，请输入数字，中间用-隔开,退出输入“Q”：')
+        num = input('请输入页码范围，min-max，请输入数字，中间用-隔开,退出输入“q”：')
         if num == 'Q':
             break
         min = int(num.split('-')[0])
@@ -59,5 +59,5 @@ if __name__ == '__main__':
         for page in range(min, max):
             picinfolist = spiderman(page)
             for x in picinfolist:
-                savepic(x[0],x[1],x[2])        
-        
+                savepic(x[0],x[1],x[2])
+
