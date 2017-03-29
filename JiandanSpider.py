@@ -22,42 +22,54 @@ def savepic(picpath, picname, picinfo):
                 f.write(i)
 
 
-#get 无聊图图片(picinfolist用来收集信息，最后返回这个列表，这么做不为别的，就是想调试时候方便点)
-def spiderman(page):
-        url= 'http://jandan.net/pic/page-'+str(page)
+#get picinfolist用来收集信息，因为无聊图和妹子图的地址不同，所以加上tab参数
+def spiderman(page,tab):
+        if tab == '1':
+            url= 'http://jandan.net/pic/page-'+str(page)
+            dirname = '无聊图'
+        else:
+            url = 'http://jandan.net/ooxx/page-'+str(page)
+            dirname = '妹子图'
         picinfolist = []
-        if os.path.exists(str(page)):
+#以页码为名称，创建文件夹
+        if os.path.exists(dirname+str(page)):
             pass
         else:
-            os.makedirs(str(page))
-#以页码为名称，创建文件夹
-
+            os.makedirs(dirname+str(page))
+#判断页码是不是已经超出最大页数，超出的话就停止
         htmlinfo = gethtml(url)
-        piclist = re.findall('查看原图.*"(.*[jpgnif]{3})"', htmlinfo.text)
-#获取目标图片地址的列表
+        if re.findall('>\[(\d*)\]<',htmlinfo.text)[0] != str(page):
+             os.removedirs(str(page))
+        else:
+            piclist = re.findall('查看原图.*"(.*[jpgnif]{3})"', htmlinfo.text)
+#获取目标图片地址的列表,
 
-        for picinfo in piclist:
-            if picinfo[:2]== '//':
-                picinfo = 'http:'+picinfo
-            if os.name == 'nt':
-                picpath = '.\\'+str(page)+'\\'
-            else:
-                picpath = './'+str(page)+'/'
-            picname = os.path.split(picinfo)[1]
-            htmlinfo= gethtml(picinfo,True)
-            picinfolist.append([picpath,picname,htmlinfo])
-        return picinfolist
+            for picinfo in piclist:
+                if picinfo[:2]== '//':
+                    picinfo = 'http:'+picinfo
+                if os.name == 'nt':
+                    picpath = '.\\'+dirname+str(page)+'\\'
+                else:
+                    picpath = './'+dirname+str(page)+'/'
+                picname = os.path.split(picinfo)[1]           
+                htmlinfo= gethtml(picinfo,True)
+                picinfolist.append([picpath,picname,htmlinfo])
+            return picinfolist
 #get picpath, pathname, pathinfo and so on
+
+
 
 if __name__ == '__main__':
     while True:
-        num = input('请输入页码范围，min-max，请输入数字，中间用-隔开,退出输入“q”：')
-        if num == 'Q':
+        tab = input('请输入想要下载的分类，无聊图输入1，妹子图输入2，退出输入“q”：')
+        num = input('请输入页码范围，min-max，请输入数字，中间用-隔开：')
+        if tab == 'q':
             break
         min = int(num.split('-')[0])
         max = int(num.split('-')[1])+1
         for page in range(min, max):
-            picinfolist = spiderman(page)
-            for x in picinfolist:
-                savepic(x[0],x[1],x[2])
+            picinfolist = spiderman(page,tab)
+            if picinfolist:
+                for x in picinfolist:
+                    savepic(x[0],x[1],x[2])
 
