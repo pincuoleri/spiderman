@@ -39,7 +39,7 @@ def spiderman(page,tab):
 #判断页码是不是已经超出最大页数，超出的话就停止
         htmlinfo = gethtml(url)
         if re.findall('>\[(\d*)\]<',htmlinfo.text)[0] != str(page):
-             os.removedirs(str(page))
+             os.removedirs(dirname+str(page))
         else:
             piclist = re.findall('查看原图.*"(.*[jpgnif]{3})"', htmlinfo.text)
 #获取目标图片地址的列表,
@@ -51,7 +51,7 @@ def spiderman(page,tab):
                     picpath = '.\\'+dirname+str(page)+'\\'
                 else:
                     picpath = './'+dirname+str(page)+'/'
-                picname = os.path.split(picinfo)[1]           
+                picname = os.path.split(picinfo)[1]
                 htmlinfo= gethtml(picinfo,True)
                 picinfolist.append([picpath,picname,htmlinfo])
             return picinfolist
