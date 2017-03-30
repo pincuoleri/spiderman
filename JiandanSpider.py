@@ -72,4 +72,4 @@ if __name__ == '__main__':
             if picinfolist:
                 for x in picinfolist:
                     savepic(x[0],x[1],x[2])
-
+        print('{}done'.format(num))
