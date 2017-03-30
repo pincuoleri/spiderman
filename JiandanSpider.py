@@ -62,9 +62,9 @@ def spiderman(page,tab):
 if __name__ == '__main__':
     while True:
         tab = input('请输入想要下载的分类，无聊图输入1，妹子图输入2，退出输入“q”：')
-        num = input('请输入页码范围，min-max，请输入数字，中间用-隔开：')
         if tab == 'q':
             break
+        num = input('请输入页码范围，min-max，请输入数字，中间用-隔开：')
         min = int(num.split('-')[0])
         max = int(num.split('-')[1])+1
         for page in range(min, max):
